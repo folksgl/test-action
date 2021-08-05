@@ -78,7 +78,7 @@ runs:
           ./cf auth ${{ inputs.cf-username }} ${{ inputs.cf-password }}
           echo "Successfully authenticated with the CF CLI."
         else
-          echo "var set to: ${{ staps.input-validation.outputs.install-only-mode }}"
+          echo "var set to: ${{ steps.input-validation.outputs.install-only-mode }}"
         fi
 
     - name: Target an environment
@@ -111,5 +111,5 @@ runs:
           echo "Setting the CF CLI to target $target_environment"
           ./cf target -o ${{ inputs.cf-org }} -s "$target_environment"
         else
-          echo "var set to: ${{ staps.input-validation.outputs.install-only-mode }}"
+          echo "var set to: ${{ steps.input-validation.outputs.install-only-mode }}"
         fi
