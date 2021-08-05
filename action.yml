@@ -51,7 +51,7 @@ runs:
         echo "::add-mask::$cf-org"
 
         # Export whether the action is in "install-only" mode
-        echo "::set-output name=install-only-mode::$install-only-mode"
+        echo "::set-output name=install-only-mode::$install_only_mode"
 
     - name: Install the CloudFoundry CLI
       shell: bash
@@ -78,7 +78,7 @@ runs:
           ./cf auth ${{ inputs.cf-username }} ${{ inputs.cf-password }}
           echo "Successfully authenticated with the CF CLI."
         else
-          echo "var set to: ${{ steps.input-validation.outputs.install-only-mode }}"
+          echo "Install-only mode was set to: ${{ steps.input-validation.outputs.install-only-mode }}"
         fi
 
     - name: Target an environment
@@ -110,6 +110,4 @@ runs:
           echo "::set-output name=ENVIRONMENT_NAME::$environment_name"
           echo "Setting the CF CLI to target $target_environment"
           ./cf target -o ${{ inputs.cf-org }} -s "$target_environment"
-        else
-          echo "var set to: ${{ steps.input-validation.outputs.install-only-mode }}"
         fi
