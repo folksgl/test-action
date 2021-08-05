@@ -1,16 +1,48 @@
+---
 name: 'Configure CF CLI'
-description: 'Installs the latest linux64 binary for the CloudFoundry CLI as outlined here: https://github.com/cloudfoundry/cli/blob/master/doc/installation-instructions/installation-instructions-v7.md#installers-and-compressed-binaries'
+description: |
+  Installs the latest linux64 binary for the CloudFoundry CLI as outlined here:
+  https://github.com/cloudfoundry/cli/blob/master/doc/installation-instructions/installation-instructions-v7.md#installers-and-compressed-binaries'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  cf-username:
+    description: 'CloudFoundry username to authenticate with'
     required: true
-    default: 'World'
+    default: ''
+  cf-password:
+    description: 'CloudFoundry password to authenticate with'
+    required: true
+    default: ''
 runs:
   using: "composite"
   steps:
-    - run: |
+    - shell: bash
+      run: |
+        # Mask the sensitive cf cli credentials
+        cf_username=${{ inputs.cf-username }}
+        cf_password=${{ inputs.cf-password }}
+        
+        if [ ! -z "$cf_username" ]; then
+          echo "::add-mask::$cf_username"
+        fi
+
+        if [ ! -z "$cf_password" ]; then
+          echo "::add-mask::$cf_password"
+        fi
+
+        # create a 'bin' directory for the binary
         mkdir -p cfcli/bin
         cd cfcli/bin
-        curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=v7&source=github" | tar -zx
+
+        # Download and extract the CLI
+        curl --silent --show-error -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=v7&source=github" | tar -zx
+
+        # Put the binary on the GITHUB_PATH
         echo "$(pwd)" >> $GITHUB_PATH
-      shell: bash
+        echo "Successfully installed the CF CLI at $(pwd)"
+
+        # Authenticate to the cloud.gov cli if user/pass was provided
+        if [ ! -z "$cf_username" ] && [ ! -z "$cf_password" ]; then
+          cf api https://api.fr.cloud.gov
+          cf auth ${{ inputs.cf-username }} ${{ inputs.cf-password }}
+          echo "Successfully authenticated with the CF CLI."
+        fi
