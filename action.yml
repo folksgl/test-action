@@ -20,13 +20,21 @@ runs:
         # Mask the sensitive cf cli credentials
         cf_username=${{ inputs.cf-username }}
         cf_password=${{ inputs.cf-password }}
-        
+
+        try_cf_authenticate=true # only try to auth if both user+pass were given
+
         if [ ! -z "$cf_username" ]; then
           echo "::add-mask::$cf_username"
+        else
+          try_cf_authenticate=false
+          echo "cf-username not given. Will not attempt to authenticate with cf cli."
         fi
 
         if [ ! -z "$cf_password" ]; then
           echo "::add-mask::$cf_password"
+        else
+          try_cf_authenticate=false
+          echo "cf-password not given. Will not attempt to authenticate with cf cli."
         fi
 
         # create a 'bin' directory for the binary
@@ -41,7 +49,7 @@ runs:
         echo "Successfully installed the CF CLI at $(pwd)"
 
         # Authenticate to the cloud.gov cli if user/pass was provided
-        if [ ! -z "$cf_username" ] && [ ! -z "$cf_password" ]; then
+        if [ "$try_cf_authenticate" = true ]; then
           # The 'PATH' currently doesn't have 'cf' on it, so use ./
           ./cf api https://api.fr.cloud.gov
           ./cf auth ${{ inputs.cf-username }} ${{ inputs.cf-password }}
