@@ -77,7 +77,7 @@ runs:
 
     - name: Authenticate to the CF API
       shell: bash
-      if: ${{ inputs.cf-username != '' && inputs.cf-password != '' }}
+      if: inputs.cf-username != '' && inputs.cf-password != ''
       run: |
         # Authenticate to the cloud.gov cli if user/pass was provided
         # The 'PATH' currently doesn't have 'cf' on it, so use ./
@@ -88,7 +88,7 @@ runs:
     - name: Target an environment
       id: environment
       shell: bash
-      if: ${{ inputs.cf-org != '' }}
+      if: inputs.cf-org != ''
       run: |
         # Determine the deployment target based on the github ref and set the
         # 'cf target' to the correct value.
