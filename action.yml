@@ -27,14 +27,14 @@ runs:
           echo "::add-mask::$cf_username"
         else
           try_cf_authenticate=false
-          echo "cf-username not given. Will not attempt to authenticate with cf cli."
+          echo "No username given. Skipping authentication to cf api."
         fi
 
         if [ ! -z "$cf_password" ]; then
           echo "::add-mask::$cf_password"
         else
           try_cf_authenticate=false
-          echo "cf-password not given. Will not attempt to authenticate with cf cli."
+          echo "No password given. Skipping authentication to cf api."
         fi
 
         # create a 'bin' directory for the binary
