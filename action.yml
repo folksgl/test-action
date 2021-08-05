@@ -55,3 +55,5 @@ runs:
           ./cf auth ${{ inputs.cf-username }} ${{ inputs.cf-password }}
           echo "Successfully authenticated with the CF CLI."
         fi
+
+        echo "Github Ref is: ${{ github.ref }}"
