@@ -1,21 +1,16 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'Configure CF CLI'
+description: 'Installs the latest linux64 binary for the CloudFoundry CLI as outlined here: https://github.com/cloudfoundry/cli/blob/master/doc/installation-instructions/installation-instructions-v7.md#installers-and-compressed-binaries'
 inputs:
   who-to-greet:  # id of input
     description: 'Who to greet'
     required: true
     default: 'World'
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
 runs:
   using: "composite"
   steps:
-    - run: echo Hello ${{ inputs.who-to-greet }}.
-      shell: bash
-    - id: random-number-generator
-      run: echo "::set-output name=random-id::$(echo $RANDOM)"
-      shell: bash
-    - run: ${{ github.action_path }}/goodbye.sh
+    - run: |
+        mkdir -p cfcli/bin
+        cd cfcli/bin
+        curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=v7&source=github" | tar -zx
+        echo "$(pwd)" >> $GITHUB_PATH
       shell: bash
