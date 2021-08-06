@@ -123,5 +123,6 @@ runs:
             # Set the outputs for this step
             echo "::set-output name=ENVIRONMENT_NAME::$environment_name"
             echo "Setting the CF CLI to target $target_environment"
+            echo "Environment name: $environment_name"
             cf target -o ${{ inputs.cf-org }} -s "$target_environment"
         fi
