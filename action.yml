@@ -109,7 +109,7 @@ runs:
                     # Tags on main are deployed to test
                     target_environment=give-test
                     environment_name=test
-                elif [[ "$GIHUB_EVENT_NAME" == "release" ]]
+                elif [[ "$GITHUB_EVENT_NAME" == "release" ]]
                 then
                     # Release events on tags are deployed to prod
                     target_environment=give-prod
