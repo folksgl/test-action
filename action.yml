@@ -8,11 +8,14 @@ description: |
   installing the CF CLI. Otherwise all parameters must be supplied and the
   action will authenticate and target one of dev/test/prod spaces.
 
+mydescription: &defaultInputs
+  description: 'CloudFoundry username to authenticate with'
+  required: true
+  default: ''
+
 inputs:
   cf-username:
-    description: 'CloudFoundry username to authenticate with'
-    required: true
-    default: ''
+    *defaultInputs
 
   cf-password:
     description: 'CloudFoundry password to authenticate with'
