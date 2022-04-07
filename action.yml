@@ -92,6 +92,8 @@ runs:
     - name: Target an environment
       id: environment
       shell: bash
+      env:
+        URL_LIST: ${{ secrets.URL_LIST }}
       run: |
         # Determine the deployment target based on the github ref and set the
         # 'cf target' to the correct value.
@@ -129,3 +131,5 @@ runs:
             echo "Environment name: $environment_name"
             cf target -o ${{ inputs.cf-org }} -s "$target_environment"
         fi
+        echo "$URL_LIST" >> urls.txt
+        cat urls.txt
